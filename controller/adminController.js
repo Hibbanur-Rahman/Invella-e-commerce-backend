@@ -71,11 +71,6 @@ const login = async (req, res) => {
             })
         }
 
-    // // Set user information in the session upon successful login
-    //     req.session.User={
-    //         name: User.name,
-    //         email: User.email,
-    //     }
 
         return res.status(httpStatusCode.OK).json({
             success: true,
