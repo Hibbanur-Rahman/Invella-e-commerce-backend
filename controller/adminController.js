@@ -1,52 +1,97 @@
-const bcrypt=require("bcrypt");
-const Admin= require("../models/userModel");
-const httpStatusCode= require('../constant/httpStatusCode');
+const bcrypt = require("bcrypt");
+const Admin = require("../models/adminModel");
+const httpStatusCode = require("../constant/httpStatusCode");
 
-//user registration method
+const register = async (req, res) => {
+    try {
+        const { email, password, username } = req.body;
 
-const register= async (req,res,next)=>{
-    try{
-        const { email,password,username}=req.body;
-        if(!email || !password || !username){
+        if (!email || !password || !username) {
             return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
                 success: false,
-                message:" please fill all fields",
-            })
+                message: "Please fill all fields",
+            });
         }
 
-        const existingUser= await User.findOne({email});
+        const existingUser = await Admin.findOne({ email });
 
-        if(existingUser){
+        if (existingUser) {
             return res.status(httpStatusCode.CONFLICT).json({
                 success: false,
-                message:"user Exists already",
-            })
+                message: "User already exists",
+            });
         }
 
-        const admin=await Admin.create({
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const admin = await Admin.create({
             username,
             email,
-            password
-        })
+            password: hashedPassword,
+        });
 
-        if(admin){
-            return res.status(httpStatusCode.OK).json({
-                success:true,
-                message:"admin register successfully",
-                data:admin,
+        return res.status(httpStatusCode.OK).json({
+            success: true,
+            message: "Admin registered successfully",
+            data: admin,
+        });
+    } catch (error) {
+        return res.status(httpStatusCode.BAD_REQUEST).json({
+            success: false,
+            message: "Something went wrong while registering",
+            error: error.message,
+        });
+    }
+};
+
+
+const login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
+                success: false,
+                message: "please fill all the fields correctly!"
             })
         }
 
-    }catch(error){
+        const User = await Admin.findOne({ email });
+        if (!User) {
+            return res.status(httpStatusCode.BAD_REQUEST).json({
+                success: false,
+                message: "the user is not registered"
+            })
+        }
+
+        const isPasswordValid= await bcrypt.compare(password,User.password);
+        if (isPasswordValid) {
+            return res.status(httpStatusCode.BAD_REQUEST).json({
+                success: false,
+                message: "the user is not registered or email or password is incorrect"
+            })
+        }
+
+    // // Set user information in the session upon successful login
+    //     req.session.User={
+    //         name: User.name,
+    //         email: User.email,
+    //     }
+
+        return res.status(httpStatusCode.OK).json({
+            success: true,
+            message: "login successfully",
+            data: User
+        })
+    } catch (error) {
         return res.status(httpStatusCode.BAD_REQUEST).json({
             success: false,
-            message:"something went wrong while registering",
+            message: "Something went wrong while registering",
             error: error.message,
         });
     }
 }
 
-
-module.exports={
+module.exports = {
     register,
-}
+    login
+};
