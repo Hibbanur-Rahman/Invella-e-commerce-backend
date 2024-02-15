@@ -1,6 +1,7 @@
+const bcrypt = require("bcrypt");
 const httpStatusCode = require('../constant/httpStatusCode');
 const UserModel = require('../models/userModel');
-const bcrypt= require('bcrypt')
+
 const UserRegister = async (req, res) => {
     try {
         const { username, email, password, phone } = req.body;
@@ -8,51 +9,45 @@ const UserRegister = async (req, res) => {
             return res.status(httpStatusCode.BAD_REQUEST).json({
                 success: false,
                 message: "all fields are required",
-
-            })
+            });
         }
 
         const existingUser = await UserModel.findOne({
-            $or: [{
-                email: req.body.email
-            }, {
-                phone: req.body.phone
-            }]
-        })
+            $or: [{ email }, { phone }]
+        });
 
-        if(existingUser){
+        if (existingUser) {
             return res.status(httpStatusCode.CONFLICT).json({
-                success:false,
-                message:"user is registered already  with email or phoneplease sign in"
-            })
+                success: false,
+                message: "User is already registered with this email or phone. Please sign in.",
+            });
         }
+
         const hashedPassword = await bcrypt.hash(password, 10);
-        const User = await UserModel.create({
+        const user = await UserModel.create({
             username,
             email,
-            password:hashedPassword,
+            password: hashedPassword,
             phone
-        })
+        });
 
-        if(User){
+        if (user) {
             return res.status(httpStatusCode.OK).json({
                 success: true,
-                message:"user registered successfully !!",
-                data: User
-            })
+                message: "User registered successfully!",
+                data: user
+            });
         }
-
 
     } catch (error) {
         return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
             success: false,
-            message: "something went wrong !!",
+            message: "Something went wrong!",
             error: error.message,
-        })
+        });
     }
-}
+};
 
-
-module.exports= {
+module.exports = {
     UserRegister,
-}
+};
