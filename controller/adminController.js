@@ -64,7 +64,7 @@ const login = async (req, res) => {
         }
 
         const isPasswordValid= await bcrypt.compare(password,User.password);
-        if (isPasswordValid) {
+        if (!isPasswordValid) {
             return res.status(httpStatusCode.BAD_REQUEST).json({
                 success: false,
                 message: "the user is not registered or email or password is incorrect"
