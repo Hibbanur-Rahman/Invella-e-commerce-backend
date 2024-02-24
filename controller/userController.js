@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const { validationResult } = require("express-validator");
 const httpStatusCode = require("../constant/httpStatusCode");
 const UserModel = require("../models/userModel");
+const {getToken}=require('../middleware/authMiddleware');
 
 const registerUser = async (req, res) => {
   try {
