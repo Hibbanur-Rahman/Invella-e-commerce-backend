@@ -70,21 +70,20 @@ const loginUser = async (req, res) => {
 
     // Compare passwords
     const isPasswordValid = await bcrypt.compare(password, user.password);
-
     if (!isPasswordValid) {
       return res.status(httpStatusCode.UNAUTHORIZED).json({
         success: false,
         message: "Invalid password",
-        data:password,
-        email:email,
-        user:user
       });
     }
+
+    // Generate token
+    const token = await getToken(user);
 
     return res.status(httpStatusCode.OK).json({
       success: true,
       message: "Successfully logged in!",
-      data: user,
+      data: { user, token },
     });
   } catch (error) {
     console.error("Error logging in:", error);
@@ -95,6 +94,7 @@ const loginUser = async (req, res) => {
     });
   }
 };
+
 
 module.exports = {
   registerUser,

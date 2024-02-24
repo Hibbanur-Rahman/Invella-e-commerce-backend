@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const Admin = require("../models/adminModel");
 const httpStatusCode = require("../constant/httpStatusCode");
+const { getToken } = require("../middleware/authMiddleware");
 
 const register = async (req, res) => {
     try {
@@ -63,7 +64,7 @@ const login = async (req, res) => {
             })
         }
 
-        const isPasswordValid= await bcrypt.compare(password,User.password);
+        const isPasswordValid = await bcrypt.compare(password, User.password);
         if (!isPasswordValid) {
             return res.status(httpStatusCode.BAD_REQUEST).json({
                 success: false,
@@ -72,10 +73,11 @@ const login = async (req, res) => {
         }
 
 
+        const token = await getToken(User)
         return res.status(httpStatusCode.OK).json({
             success: true,
             message: "login successfully",
-            data: User
+            data: { User, token }
         })
     } catch (error) {
         return res.status(httpStatusCode.BAD_REQUEST).json({
