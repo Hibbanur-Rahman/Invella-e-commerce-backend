@@ -18,7 +18,7 @@ const registerUser = async (req, res) => {
     const { username, email, password, phone } = req.body;
 
     // Check if user with provided email or phone already exists
-    const existingUser = await UserModel.findOne({ $or: [{ email }, { phone }] });
+    const existingUser = await UserModel.findOne({email});
     if (existingUser) {
       return res.status(httpStatusCode.CONFLICT).json({
         success: false,
@@ -32,6 +32,7 @@ const registerUser = async (req, res) => {
     // Create new user
     const user = await UserModel.create({ username, email, password: hashedPassword, phone });
 
+    
     return res.status(httpStatusCode.CREATED).json({
       success: true,
       message: "User registered successfully!",
@@ -81,6 +82,7 @@ const loginUser = async (req, res) => {
     // Generate token
     const token = await getToken(user);
 
+    console.log(token)
     return res.status(httpStatusCode.OK).json({
       success: true,
       message: "Successfully logged in!",
