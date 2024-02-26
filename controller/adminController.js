@@ -29,6 +29,7 @@ const register = async (req, res) => {
             username,
             email,
             password: hashedPassword,
+            role:'admin'
         });
 
         return res.status(httpStatusCode.OK).json({

@@ -2,7 +2,8 @@ const bcrypt = require("bcrypt");
 const { validationResult } = require("express-validator");
 const httpStatusCode = require("../constant/httpStatusCode");
 const UserModel = require("../models/userModel");
-const {getToken}=require('../middleware/authMiddleware');
+const { getToken } = require("../middleware/authMiddleware");
+const AdminModel = require("../models/adminModel");
 
 const registerUser = async (req, res) => {
   try {
@@ -18,11 +19,12 @@ const registerUser = async (req, res) => {
     const { username, email, password, phone } = req.body;
 
     // Check if user with provided email or phone already exists
-    const existingUser = await UserModel.findOne({email});
+    const existingUser = await UserModel.findOne({ email });
     if (existingUser) {
       return res.status(httpStatusCode.CONFLICT).json({
         success: false,
-        message: "User is already registered with this email or phone. Please sign in.",
+        message:
+          "User is already registered with this email or phone. Please sign in.",
       });
     }
 
@@ -30,9 +32,14 @@ const registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create new user
-    const user = await UserModel.create({ username, email, password: hashedPassword, phone });
+    const user = await UserModel.create({
+      username,
+      email,
+      password: hashedPassword,
+      phone,
+      role: "user",
+    });
 
-    
     return res.status(httpStatusCode.CREATED).json({
       success: true,
       message: "User registered successfully!",
@@ -50,9 +57,6 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
-
-    // Validate incoming request data
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(httpStatusCode.BAD_REQUEST).json({
@@ -61,17 +65,23 @@ const loginUser = async (req, res) => {
       });
     }
 
-    // Find user by email
-    const user = await UserModel.findOne({ email });
+    const { email, password } = req.body;
+
+    let user = await UserModel.findOne({ email });
+
+    if (!user) {
+      user = await AdminModel.findOne({ email });
+    }
+
     if (!user) {
       return res.status(httpStatusCode.UNAUTHORIZED).json({
         success: false,
-        message: "Invalid email or user is unauthorized. Please register first!",
+        message: "Invalid email. Please register first!",
       });
     }
 
-    // Compare passwords
     const isPasswordValid = await bcrypt.compare(password, user.password);
+
     if (!isPasswordValid) {
       return res.status(httpStatusCode.UNAUTHORIZED).json({
         success: false,
@@ -79,14 +89,12 @@ const loginUser = async (req, res) => {
       });
     }
 
-    // Generate token
     const token = await getToken(user);
 
-    console.log(token)
     return res.status(httpStatusCode.OK).json({
       success: true,
       message: "Successfully logged in!",
-      data: { user, token },
+      data: { user, token, role: user.role },
     });
   } catch (error) {
     console.error("Error logging in:", error);
@@ -97,7 +105,6 @@ const loginUser = async (req, res) => {
     });
   }
 };
-
 
 module.exports = {
   registerUser,
