@@ -3,7 +3,8 @@ const CategoryModel = require('../models/categoryModel');
 
 const AddCategory = async (req, res) => {
     try {
-        const { name } = req.body;
+        const { categoryName } = req.body;
+        const name=categoryName;
         if (!name) {
             return res.status(httpStatusCode.BAD_REQUEST).json({
                 success: false,
@@ -31,7 +32,7 @@ const AddCategory = async (req, res) => {
             })
         }
 
-        return res.status(httpStatusCode.OK).json({
+        return res.status(httpStatusCode.CREATED).json({
             success: true,
             message: "You created Successfully !!",
             data: category

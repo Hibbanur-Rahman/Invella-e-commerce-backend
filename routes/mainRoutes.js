@@ -13,8 +13,7 @@ Router.post("/user-Register", registerUser);
 Router.post("/user-Login",loginUser);
 
 
-// Router.post('/add-category',verifyToken,AddCategory);
+Router.post('/add-category',verifyToken,AddCategory);
 // Router.post('/add-product',verifyToken,AddProduct);
 
-Router.post('/add-category',AddCategory);
 module.exports = Router;
