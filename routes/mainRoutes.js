@@ -17,6 +17,5 @@ Router.post('/add-category',verifyToken,AddCategory);
 Router.get('/view-category',verifyToken,ViewCategory);
 Router.post('/add-product',verifyToken,AddProduct);
 
-// Router.post('/add-product',verifyToken,AddProduct);
 
 module.exports = Router;
