@@ -20,6 +20,10 @@ const ProductSchema= new mongoose.Schema({
     category:{
         type: mongoose.Types.ObjectId,
         ref: 'category'
+    },
+    stock:{
+        type: String,
+        required: true
     }
 },{timestamps: true});
 

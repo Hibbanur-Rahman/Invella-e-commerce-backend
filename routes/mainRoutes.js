@@ -1,7 +1,7 @@
 const Router = require("express").Router();
 const { register, login } = require("../controller/adminController");
 const { registerUser, loginUser } = require("../controller/userController");
-const {AddCategory}= require('../controller/categoryController');
+const {AddCategory, ViewCategory}= require('../controller/categoryController');
 const { AddProduct } = require("../controller/productController");
 const { verifyToken } = require("../middleware/authMiddleware");
 
@@ -14,6 +14,9 @@ Router.post("/user-Login",loginUser);
 
 
 Router.post('/add-category',verifyToken,AddCategory);
+Router.get('/view-category',verifyToken,ViewCategory);
+Router.post('/add-product',verifyToken,AddProduct);
+
 // Router.post('/add-product',verifyToken,AddProduct);
 
 module.exports = Router;

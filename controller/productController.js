@@ -14,14 +14,15 @@ const AddProduct = async (req, res) => {
             });
         }
 
-        const { name, description, price, productImage, category } = req.body;
-
+        const { productName, description, price, productImage, category,stock } = req.body;
+        const name= productName;
         const product = await ProductModel.create({
             name,
             description,
             price,
             productImage,
-            category
+            category,
+            stock
         });
 
         if (!product) {
@@ -31,7 +32,7 @@ const AddProduct = async (req, res) => {
             });
         }
 
-        return res.status(httpStatusCode.OK).json({
+        return res.status(httpStatusCode.CREATED).json({
             success: true,
             message: "Product added successfully!",
             data: product

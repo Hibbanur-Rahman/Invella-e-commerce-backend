@@ -62,7 +62,32 @@ const DeleteCategory = async (req, res) => {
     }
 }
 
+const ViewCategory= async (req,res)=>{
+    try{
+        const categoryList= await CategoryModel.find();
+        if(!categoryList){
+            return res.status(httpStatusCode.BAD_REQUEST).json({
+                success:false,
+                message:"Somenthing wrong with database!!"
+            })
+        }
+
+        return res.status(httpStatusCode.OK).json({
+            success: true,
+            message:"successfully viewed !!",
+            data:categoryList 
+        })
+    }catch(error){
+        return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            messgae:"Something went wrong !!",
+            error: error.message
+        })
+    }
+}
+
 module.exports = {
     AddCategory,
-    DeleteCategory
+    DeleteCategory,
+    ViewCategory
 }
