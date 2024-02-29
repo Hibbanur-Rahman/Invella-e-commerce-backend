@@ -4,7 +4,7 @@ require("dotenv").config();
 const httpStatusCode = require('../constant/httpStatusCode');
 
 async function getToken(user) {
-    const token = await jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = await jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: '1d' });
     return token;
 }
 
