@@ -106,7 +106,34 @@ const loginUser = async (req, res) => {
   }
 };
 
+
+const ViewUsers= async(req,res)=>{
+  try{
+    const Users= await UserModel.find();
+    if(!Users){
+      return res.status(httpStatusCode.BAD_REQUEST).json({
+        success:false,
+        message:"users are not found"
+      })
+    }
+
+    return res.status(httpStatusCode.OK).json({
+      success: true,
+      message:"viewd successfully",
+      data: Users
+    })
+
+  }catch(error){
+    return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message:"something went wrong !!",
+      error: error.message
+    })
+  }
+}
+
 module.exports = {
   registerUser,
   loginUser,
+  ViewUsers
 };
