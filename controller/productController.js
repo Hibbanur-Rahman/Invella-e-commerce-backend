@@ -18,11 +18,12 @@ const AddProduct = async (req, res) => {
     const { productName, description, price, productImage, category, stock } =
       req.body;
     const name = productName;
+    const productImageName=req.file.filename;
     const product = await ProductModel.create({
       name,
       description,
       price,
-      productImage,
+      productImage :productImageName,
       category,
       stock,
     });
