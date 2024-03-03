@@ -5,7 +5,8 @@ const {AddCategory, ViewCategory}= require('../controller/categoryController');
 const { AddProduct, ViewProduct } = require("../controller/productController");
 const { verifyToken } = require("../middleware/authMiddleware");
 const upload = require("../middleware/multerMiddleware");
-const { ViewImages } = require("../utils/viewImages");
+const { AddBillingAddress, AddShippingAddress } = require("../controller/addressController");
+
 
 
 Router.post("/register", register);
@@ -20,11 +21,8 @@ Router.post('/add-category',verifyToken,AddCategory);
 Router.get('/view-category',verifyToken,ViewCategory);
 Router.post('/add-product',verifyToken,upload.single("productImage"),AddProduct);
 Router.get('/view-product',verifyToken,ViewProduct);
-// Router.post('/uploads-product',verifyToken,upload.single("productImage"))
 
-
-
-Router.get('/view-images',ViewImages);
-
+Router.post('/add-billing-address',verifyToken,AddBillingAddress);
+Router.post('/add-shipping-address',verifyToken,AddShippingAddress);
 
 module.exports = Router;
