@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const { dbConnection } = require("./configs/db");
+const path=require('path')
 
 require("dotenv").config();
 
@@ -27,6 +28,8 @@ app.use(
   })
 );
 
+// Serve static files (images) from the 'uploads' folder
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Routes
 app.use("/", mainRoutes);
 
