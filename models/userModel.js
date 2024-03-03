@@ -1,11 +1,10 @@
 const mongoose = require("mongoose");
 
-
 const UserSchema = new mongoose.Schema(
   {
-    username:{
+    username: {
       type: String,
-      required: true
+      required: true,
     },
     email: {
       type: String,
@@ -15,19 +14,20 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    address: {
-      type: String,
-    },
     phone: {
       type: String,
       required: true,
     },
-    role:{
+    role: {
       type: String,
-      required: true
+      required: true,
+    },
+    address: {
+      type: mongoose.Types.ObjectId,
+      ref: "address",
     }
   },
   { timestamps: true }
 );
 
-module.exports=mongoose.model("User",UserSchema);
+module.exports = mongoose.model("User", UserSchema);
