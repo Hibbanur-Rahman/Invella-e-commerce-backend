@@ -22,9 +22,13 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    address: {
+    billingAddress: {
       type: mongoose.Types.ObjectId,
-      ref: "address",
+      ref: "billingAddress",
+    },
+    shippingAddress:{
+      type: mongoose.Types.ObjectId,
+      ref:'shippingAddress'
     }
   },
   { timestamps: true }
