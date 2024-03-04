@@ -12,7 +12,7 @@ const AddBillingAddress=(req,res)=>{
 }
 const AddShippingAddress=(req,res)=>{
     try{
-        
+        const {}=req.body;
     }catch(error){
         return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
             success:false,
