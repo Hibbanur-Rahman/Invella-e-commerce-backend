@@ -30,10 +30,9 @@ const AddBillingAddress = async(req, res) => {
         const BillingAddress=await BillingAddressModel.create({
             firstname, 
             lastname, 
-            companyname, 
+            company:companyname, 
             country, 
-            street, 
-            street1, 
+            street:street+' '+street1, 
             city,
             state,
             pincode,
@@ -56,7 +55,7 @@ const AddBillingAddress = async(req, res) => {
     } catch (error) {
         return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
             success: false,
-            message: "Something went wrong"
+            message:error.message,
         })
     }
 }
@@ -80,23 +79,18 @@ const AddShippingAddress = async(req, res) => {
             street1, 
             city,
             state,
-            pincode,
-            phone,
-            email
+            pincode
         } = req.body;
 
         const ShippingAddress=await ShippingAddressModel.create({
             firstname, 
             lastname, 
-            companyname, 
+            company:companyname, 
             country, 
-            street, 
-            street1, 
+            street:street+' '+street1, 
             city,
             state,
-            pincode,
-            phone,
-            email
+            pincode
         });
         if(!ShippingAddress){
             return res.status(httpStatusCode.SERVICE_UNAVAILABLE).json({
