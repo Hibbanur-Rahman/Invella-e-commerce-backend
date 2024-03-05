@@ -76,10 +76,10 @@ const ShippingAddressSchema= new mongoose.Schema({
     }
 })
 
-const BillingAddress= mongoose.model('billingAddress',BillingAddressSchema);
-const ShippingAddress=mongoose.model('shippingAddress',ShippingAddressSchema);
+const BillingAddressModel= mongoose.model('billingAddress',BillingAddressSchema);
+const ShippingAddressModel=mongoose.model('shippingAddress',ShippingAddressSchema);
 
 module.exports={
-    BillingAddress,
-    ShippingAddress
+    BillingAddressModel,
+    ShippingAddressModel
 }
