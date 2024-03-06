@@ -28,6 +28,10 @@ const BillingAddressSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    street1:{
+        type: String,
+        required: true,
+    },
     city: {
         type: String,
         required: true,
@@ -40,7 +44,7 @@ const BillingAddressSchema = new mongoose.Schema({
         type: String,
         required: true,
     }
-})
+},{timestamps: true})
 const ShippingAddressSchema = new mongoose.Schema({
     firstname: {
         type: String,
@@ -74,7 +78,7 @@ const ShippingAddressSchema = new mongoose.Schema({
         type: String,
         required: true,
     }
-})
+},{timestamps: true})
 
 const BillingAddressModel = mongoose.model('billingAddress', BillingAddressSchema);
 const ShippingAddressModel = mongoose.model('shippingAddress', ShippingAddressSchema);

@@ -34,7 +34,8 @@ const AddBillingAddress = async(req, res) => {
             lastname, 
             company:companyname, 
             country, 
-            street:street+' '+street1, 
+            street,
+            street1, 
             city,
             state,
             pincode,
@@ -114,6 +115,20 @@ const AddShippingAddress = async(req, res) => {
                 message:"Something went in the Shipping Address Model!!"
             })
         }
+        const user=req.user;
+        const userId=user._id;
+        const UpdateData= await userModel.findByIdAndUpdate(userId,{
+            shippingAddress:ShippingAddress._id
+        })
+        
+        console.log(UpdateData);
+        if(!UpdateData){
+            return res.status(httpStatusCode.NOT_FOUND).json({
+                success:false,
+                message:"Something went wrong in the User Model Updated data",
+            })
+        }
+
 
         return res.status(httpStatusCode.CREATED).json({
             success: true,
@@ -134,6 +149,13 @@ const ViewBillingAddress=async (req,res)=>{
     try{
         const userId= req.user._id;
         const user= await UserModel.findById(userId);
+        console.log(user)
+        if(!user){
+            return res.status(httpStatusCode.BAD_REQUEST).json({
+                success:false,
+                message:"SOmething went wrong in user model!!"
+            })
+        }
         const BillingAddress= await BillingAddressModel.findById(user.billingAddress)
         if(!BillingAddress){
             return res.status(httpStatusCode.BAD_REQUEST).json({
@@ -155,9 +177,26 @@ const ViewBillingAddress=async (req,res)=>{
 }
 const ViewShippingAddress=async(req,res)=>{
     try{
+        const userId= req.user._id;
+        const user= await UserModel.findById(userId);
+        console.log(user)
+        if(!user){
+            return res.status(httpStatusCode.BAD_REQUEST).json({
+                success:false,
+                message:"SOmething went wrong in user model!!"
+            })
+        }
+        const ShippingAddress= await ShippingAddressModel.findById(user.shippingAddress)
+        if(!ShippingAddress){
+            return res.status(httpStatusCode.BAD_REQUEST).json({
+                success: false,
+                message:"Something went wrong in Billing Address!!"
+            })
+        }
         return res.status(httpStatusCode.OK).json({
             success: true,
-            message:"Successfully Viewed Billing Address!!!"
+            message:"Successfully Viewed Billing Address!!!",
+            data :ShippingAddress
         })
     }catch(error){
         return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({

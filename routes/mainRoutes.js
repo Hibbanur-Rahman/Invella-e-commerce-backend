@@ -24,6 +24,6 @@ Router.get('/view-product',verifyToken,ViewProduct);
 
 Router.post('/add-billing-address',verifyToken,AddBillingAddress);
 Router.post('/add-shipping-address',verifyToken,AddShippingAddress);
-Router.post('/view-billing-address',verifyToken,ViewBillingAddress);
+Router.get('/view-billing-address',verifyToken,ViewBillingAddress);
 
 module.exports = Router;
