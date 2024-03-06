@@ -130,7 +130,46 @@ const AddShippingAddress = async(req, res) => {
 }
 
 
+const ViewBillingAddress=async (req,res)=>{
+    try{
+        const userId= req.user._id;
+        const user= await UserModel.findById(userId);
+        const BillingAddress= await BillingAddressModel.findById(user.billingAddress)
+        if(!BillingAddress){
+            return res.status(httpStatusCode.BAD_REQUEST).json({
+                success: false,
+                message:"Something went wrong in Billing Address!!"
+            })
+        }
+        return res.status(httpStatusCode.OK).json({
+            success: true,
+            message:"Successfully Viewed Billing Address!!!",
+            data :BillingAddress
+        })
+    }catch(error){
+        return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
+            success:false,
+            message:"Something went wrong !!!"
+        })
+    }
+}
+const ViewShippingAddress=async(req,res)=>{
+    try{
+        return res.status(httpStatusCode.OK).json({
+            success: true,
+            message:"Successfully Viewed Billing Address!!!"
+        })
+    }catch(error){
+        return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
+            success:false,
+            message:"Something went wrong !!!"
+        })
+    }
+}
+
 module.exports = {
     AddBillingAddress,
-    AddShippingAddress
+    AddShippingAddress,
+    ViewBillingAddress,
+    ViewShippingAddress
 }
