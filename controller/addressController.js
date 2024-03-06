@@ -1,6 +1,8 @@
 const { validationResult } = require("express-validator");
 const httpStatusCode = require("../constant/httpStatusCode")
 const { BillingAddressModel, ShippingAddressModel } = require('../models/addressModel');
+const UserModel= require('../models/userModel');
+const userModel = require("../models/userModel");
 const AddBillingAddress = async(req, res) => {
     try {
 
@@ -43,6 +45,20 @@ const AddBillingAddress = async(req, res) => {
             return res.status(httpStatusCode.SERVICE_UNAVAILABLE).json({
                 success: false,
                 message:"Something went in the Billing Address Model!!"
+            })
+        }
+
+        const user=req.user;
+        const userId=user._id;
+        const UpdateData= await userModel.findByIdAndUpdate(userId,{
+            billingAddress:BillingAddress._id
+        })
+        
+        console.log(UpdateData);
+        if(!UpdateData){
+            return res.status(httpStatusCode.NOT_FOUND).json({
+                success:false,
+                message:"Something went wrong in the User Model Updated data",
             })
         }
 
