@@ -30,7 +30,7 @@ const BillingAddressSchema = new mongoose.Schema({
     },
     street1:{
         type: String,
-        required: true,
+        required: false,
     },
     city: {
         type: String,
@@ -65,6 +65,10 @@ const ShippingAddressSchema = new mongoose.Schema({
     street: {
         type: String,
         required: true,
+    },
+    street1: {
+        type: String,
+        required: false,
     },
     city: {
         type: String,

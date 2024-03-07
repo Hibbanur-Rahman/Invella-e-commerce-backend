@@ -104,7 +104,8 @@ const AddShippingAddress = async(req, res) => {
             lastname, 
             company:companyname, 
             country, 
-            street:street+' '+street1, 
+            street,
+            street1, 
             city,
             state,
             pincode
