@@ -29,6 +29,10 @@ const UserSchema = new mongoose.Schema(
     shippingAddress:{
       type: mongoose.Types.ObjectId,
       ref:'shippingAddress'
+    },
+    cart:{
+      type: mongoose.Types.ObjectId,
+      ref:'cart'
     }
   },
   { timestamps: true }
