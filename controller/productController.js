@@ -95,4 +95,35 @@ const DeleteProduct = async (req, res) => {
   }
 };
 
-module.exports = { AddProduct, ViewProduct };
+const ViewProductWithId=async (req,res)=>{
+  try{
+    const {productId}=req.body;
+    if(!productId){
+      return res.status(httpStatusCode.BAD_REQUEST).json({
+        success: false,
+        message:"Invalid ProductId or empty productId",
+      })
+    }
+    const product=await ProductModel.findById(productId);
+    if(!product){
+      return res.status(httpStatusCode.NOT_FOUND).json({
+        success:false,
+        message:"Product Not found",
+      })
+    }
+
+    return res.status(httpStatusCode.OK).json({
+      success:true,
+      message:"Successfully viewed products!!",
+      data:product
+    })
+  }catch(error){
+    return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
+      success:false,
+      message:"Something went wrong!!",
+      error:error.message
+    })
+  }
+}
+
+module.exports = { AddProduct, ViewProduct,ViewProductWithId };
