@@ -6,6 +6,7 @@ const { AddProduct, ViewProduct, ViewProductWithId } = require("../controller/pr
 const { verifyToken } = require("../middleware/authMiddleware");
 const upload = require("../middleware/multerMiddleware");
 const { AddBillingAddress, AddShippingAddress ,ViewBillingAddress, ViewShippingAddress} = require("../controller/addressController");
+const { AddCart, UpdateCart,ViewCart } = require("../controller/cartController");
 
 
 
@@ -22,6 +23,11 @@ Router.get('/view-category',verifyToken,ViewCategory);
 Router.post('/add-product',verifyToken,upload.single("productImage"),AddProduct);
 Router.get('/view-product',ViewProduct);
 Router.post('/view-product-Id',ViewProductWithId);
+
+
+Router.post('/add-cart',verifyToken,AddCart);
+Router.post('/update-cart',verifyToken,UpdateCart);
+Router.get('/view-cart',verifyToken,ViewCart)
 
 
 Router.post('/add-billing-address',verifyToken,AddBillingAddress);
