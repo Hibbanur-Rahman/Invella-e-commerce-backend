@@ -13,12 +13,41 @@ const AddCart = async (req, res) => {
         errors: errors.array(),
       });
     }
+
+    const userId=req.user._id;
+    const User=await UserModel.findById(userId)
+    
+
+    if(!User){
+      return res.status(httpStatusCode.SERVICE_UNAVAILABLE).json({
+        success:false,
+        message:"Something is wrong in the user Models!!"
+      })
+    }
+
+    const cartId=User.cart;
+
+    if(!cartId){
+      return res.status(httpStatusCode.BAD_REQUEST).json({
+        success:false,
+        message:"Invalid CartId!!"
+      })
+    }
+    
     const { productId, quantity } = req.body;
 
-    const  newCartItem=await cartModel.create({
-      productId,
-      quantity,
-    })
+    // Check if the productId already exists in the cart
+    const existingCartItem = await cartModel.findOne({ _id: cartId, 'cartItems.productId': productId });
+
+    if (existingCartItem) {
+      return res.status(httpStatusCode.CONFLICT).json({
+        success: false,
+        message: "Product is already added to cart",
+      });
+    }
+    const  newCartItem=await cartModel.findByIdAndUpdate(cartId,{
+        $push:{cartItems:{productId,quantity}}
+    },{new:true});
 
     if(!newCartItem){
       return res.status(httpStatusCode.METHOD_NOT_ALLOWED).json({
@@ -26,18 +55,7 @@ const AddCart = async (req, res) => {
         message:"Something is wrong in the cart model!!"
       })
     }
-    const userId=req.user._id;
-    const User=await UserModel.findByIdAndUpdate(userId,{
-      $push: { cart: newCartItem._id }
-    })
-
-    if(!User){
-      return res.status(httpStatusCode.SERVICE_UNAVAILABLE).json({
-        success:false,
-        message:"Something i wrong in the user Models!!"
-      })
-    }
-
+   
 
     return res.status(httpStatusCode.CREATED).json({
       success: true,
@@ -55,6 +73,7 @@ const AddCart = async (req, res) => {
 
 const UpdateCart=async(req,res)=>{
   try{
+
     return res.status(httpStatusCode.OK).json({
       success:true,
       message:"Updated successfully!!",
@@ -75,7 +94,7 @@ const ViewCart = async (req, res) => {
     if (!userId) {
       return res.status(httpStatusCode.BAD_REQUEST).json({
         success: false,
-        message: "UserId is Invalid",
+        message: "Invalid user ID",
       });
     }
     
@@ -86,6 +105,7 @@ const ViewCart = async (req, res) => {
         model: 'product'
       }
     });
+
     if (!user) {
       return res.status(httpStatusCode.NOT_FOUND).json({
         success: false,
@@ -99,17 +119,28 @@ const ViewCart = async (req, res) => {
       data: user.cart
     });
   } catch (error) {
+    console.error("Error retrieving cart:", error);
     return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: "Something went wrong",
+      message: "Something went wrong while retrieving cart",
       error: error.message
     });
   }
 };
 
+const CreateEmptyCart = async () => {
+  try {
+    const newCart = await cartModel.create({});
+    return newCart._id;
+  } catch (error) {
+    console.error("Error creating empty cart:", error);
+    throw error;
+  }
+};
 
 module.exports = {
   AddCart,
   UpdateCart,
-  ViewCart
+  ViewCart,
+  CreateEmptyCart
 };

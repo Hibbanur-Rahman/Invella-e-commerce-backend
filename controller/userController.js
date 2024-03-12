@@ -4,7 +4,7 @@ const httpStatusCode = require("../constant/httpStatusCode");
 const UserModel = require("../models/userModel");
 const { getToken } = require("../middleware/authMiddleware");
 const AdminModel = require("../models/adminModel");
-
+const {CreateEmptyCart}= require('../controller/cartController');
 const registerUser = async (req, res) => {
   try {
     // Validate incoming request data
@@ -30,6 +30,9 @@ const registerUser = async (req, res) => {
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
+    
+    //create a empty cart
+    const cart=await CreateEmptyCart();
 
     // Create new user
     const user = await UserModel.create({
@@ -38,8 +41,10 @@ const registerUser = async (req, res) => {
       password: hashedPassword,
       phone,
       role: "user",
+      cart:cart
     });
 
+    
     return res.status(httpStatusCode.CREATED).json({
       success: true,
       message: "User registered successfully!",

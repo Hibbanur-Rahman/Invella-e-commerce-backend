@@ -30,10 +30,10 @@ const UserSchema = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref:'shippingAddress'
     },
-    cart:[{
+    cart:{
       type: mongoose.Types.ObjectId,
       ref:'cart'
-    }]
+    }
   },
   { timestamps: true }
 );
