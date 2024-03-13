@@ -74,10 +74,37 @@ const AddCart = async (req, res) => {
 const UpdateCart=async(req,res)=>{
   try{
 
+    const userId=req.user._id;
+    const User=await UserModel.findById(userId)
+    
+
+    if(!User){
+      return res.status(httpStatusCode.SERVICE_UNAVAILABLE).json({
+        success:false,
+        message:"Something is wrong in the user Models!!"
+      })
+    }
+    
+  
+    const cartId=User.cart;
+    const Cart=await cartModel.findById(cartId);
+    if(!Cart){
+      return res.status(httpStatusCode.NOT_FOUND).json({
+        success:false,
+        message:"Cart is not found!!"
+      })
+    }
+
+    const {productId,quantity}=req.body;
+    const existingCartItem=Cart.cartItems.find((item)=>item.productId.toString()===productId);
+    if(existingCartItem){
+      existingCartItem.quantity=quantity;
+      await Cart.save();
+    }
     return res.status(httpStatusCode.OK).json({
       success:true,
       message:"Updated successfully!!",
-      data:''
+      data:Cart
     })
   }catch(error){
     return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
@@ -101,7 +128,7 @@ const ViewCart = async (req, res) => {
     const user = await UserModel.findById(userId).populate({
       path: 'cart',
       populate: {
-        path: 'productId',
+        path: 'cartItems.productId',
         model: 'product'
       }
     });
@@ -138,9 +165,51 @@ const CreateEmptyCart = async () => {
   }
 };
 
+
+const DeleteCart=async(req,res)=>{
+  try{
+   
+    const userId=req.user._id;
+    const User=await UserModel.findById(userId)
+    if(!User){
+      return res.status(httpStatusCode.NOT_FOUND).json({
+        success:false,
+        message:"Something is wrong in the user Models!!"
+      })
+    }
+
+    const cartId=User.cart;
+    const Cart=await cartModel.findById(cartId);
+    if(!Cart){
+      return res.status(httpStatusCode.NOT_FOUND).json({
+        success:false,
+        message:"Cart is not found!!"
+      })
+    }
+
+    const {productId}=req.body;
+    Cart.cartItems=Cart.cartItems.filter((item)=>item.productId.toString()!==productId);
+
+    await Cart.save();
+
+    return res.status(httpStatusCode.OK).json({
+      success:false,
+      message:"Successfully deleted the cart items!!",
+      data:''
+    })
+  }catch(error){
+    return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
+      success:false,
+      message:"something went wrong while deleting the cart item!!",
+      error:error.message
+    })
+  }
+}
+
 module.exports = {
   AddCart,
   UpdateCart,
   ViewCart,
-  CreateEmptyCart
+  CreateEmptyCart,
+  DeleteCart
 };
