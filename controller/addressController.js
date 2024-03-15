@@ -32,7 +32,7 @@ const AddBillingAddress = async(req, res) => {
         const BillingAddress=await BillingAddressModel.create({
             firstname, 
             lastname, 
-            company:companyname, 
+            companyname, 
             country, 
             street,
             street1, 
@@ -102,7 +102,7 @@ const AddShippingAddress = async(req, res) => {
         const ShippingAddress=await ShippingAddressModel.create({
             firstname, 
             lastname, 
-            company:companyname, 
+            companyname, 
             country, 
             street,
             street1, 

@@ -16,9 +16,9 @@ const BillingAddressSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    company: {
+    companyname: {
         type: String,
-        required: true,
+        required: false,
     },
     country: {
         type: String,
@@ -54,9 +54,9 @@ const ShippingAddressSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    company: {
+    companyname: {
         type: String,
-        required: true,
+        required: false,
     },
     country: {
         type: String,
