@@ -7,7 +7,7 @@ const { verifyToken } = require("../middleware/authMiddleware");
 const upload = require("../middleware/multerMiddleware");
 const { AddBillingAddress, AddShippingAddress ,ViewBillingAddress, ViewShippingAddress} = require("../controller/addressController");
 const { AddCart, UpdateCart,ViewCart, DeleteCart } = require("../controller/cartController");
-
+const {Payment}=require('../controller/paymentController');
 
 
 Router.post("/register", register);
@@ -36,5 +36,7 @@ Router.post('/add-shipping-address',verifyToken,AddShippingAddress);
 Router.get('/view-billing-address',verifyToken,ViewBillingAddress);
 Router.get('/view-shipping-address',verifyToken,ViewShippingAddress);
 
+
+Router.post('/payment',verifyToken,Payment);
 
 module.exports = Router;
