@@ -2,7 +2,7 @@ const Router = require("express").Router();
 const { register, login } = require("../controller/adminController");
 const { registerUser, loginUser,ViewUsers } = require("../controller/userController");
 const {AddCategory, ViewCategory}= require('../controller/categoryController');
-const { AddProduct, ViewProduct, ViewProductWithId } = require("../controller/productController");
+const { AddProduct, ViewProduct, ViewProductWithId,ViewProductCategory } = require("../controller/productController");
 const { verifyToken } = require("../middleware/authMiddleware");
 const upload = require("../middleware/multerMiddleware");
 const { AddBillingAddress, AddShippingAddress ,ViewBillingAddress, ViewShippingAddress} = require("../controller/addressController");
@@ -24,6 +24,7 @@ Router.get('/view-category',verifyToken,ViewCategory);
 Router.post('/add-product',verifyToken,upload.single("productImage"),AddProduct);
 Router.get('/view-product',ViewProduct);
 Router.post('/view-product-Id',ViewProductWithId);
+Router.post('/view-product-category',ViewProductCategory);
 
 
 Router.post('/add-cart',verifyToken,AddCart);
